@@ -17,6 +17,18 @@ Your task is to write a function that takes a pyramid representation as an argum
 
 */
 
+function longestSlideDown(pyramid) {
+  for (let row = pyramid.length - 2; row >= 0; row--) {
+    for (let index = 0; index < pyramid[row].length; index++) {
+      let leftChild = pyramid[row + 1][index];
+      let rightChild = pyramid[row + 1][index + 1];
+      pyramid[row][index] += Math.max(leftChild, rightChild);
+    }
+  }
+  // The top of the pyramid contains the maximum slide down sum
+  return pyramid[0][0];
+}
+
 const Test = require('@codewars/test-compat');
 
 describe('Tests', () => {
