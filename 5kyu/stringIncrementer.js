@@ -19,6 +19,7 @@ foo099 -> foo100
 Attention: If the number has leading zeros the amount of digits should be considered.
 */
 
+// Method 1
 function incrementString(inputString) {
   let num = '';
   let str = '';
@@ -48,6 +49,24 @@ function incrementString(inputString) {
   if (carry) newNum = '1' + newNum;
 
   return str + newNum;
+}
+
+// Method 2
+function incrementString(inputString) {
+  let hasNumbers = /\d/.test(inputString);
+  if (hasNumbers) {
+    let i = inputString.length;
+    while (i-- && !isNaN(inputString[i]));
+    let num = inputString.slice(i + 1);
+    let str = inputString.slice(0, i + 1);
+    let newNum = (parseInt(num) + 1).toString();
+    while (newNum.length < num.length) {
+      newNum = '0' + newNum;
+    }
+    return str + newNum;
+  } else {
+    return inputString + '1';
+  }
 }
 
 console.log(incrementString('foobar000')); // foobar001
