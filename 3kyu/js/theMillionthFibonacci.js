@@ -30,24 +30,46 @@ HINT I: Can you rearrange the equation fib(n + 2) = fib(n + 1) + fib(n) to find 
 HINT II: See https://web.archive.org/web/20220614001843/https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-11.html#%_sec_1.2.4
 */
 
-// Refactored
-function fib(n) {
-  let previous = 0n;
-  let current = 1n;
+// Optimized the code:
+let fib = (n) => {
+  n = BigInt(n);
+  if (n >= 0n) return fibonacciHelper(0n, 1n, n)[0];
+  else return n % 2n === 0n ? -fibonacciHelper(0n, 1n, -n)[0] : fibonacciHelper(0n, 1n, -n)[0];
+};
 
-  if (n > 0) {
-    for (let i = 0; i < n; i++) {
-      [previous, current] = [current, previous + current];
-    }
-    return previous;
-  } else {
-    n = -n;
-    for (let i = 0; i < n; i++) {
-      [previous, current] = [current - previous, previous];
-    }
-    return previous;
-  }
-}
+const fibonacciHelper = (a, b, n) => {
+  if (n === 0n) return [a, b];
+
+  // calculates the pair (F(n/2), F(n/2 + 1))
+  const [halfFib, nextHalfFib] = fibonacciHelper(a, b, n / 2n);
+
+  // using a formula for F(2k) and F(2k+1)
+  const doubleIndexFib = halfFib * (2n * nextHalfFib - halfFib);
+  const nextDoubleIndexFib = halfFib * halfFib + nextHalfFib * nextHalfFib;
+
+  return n % 2n === 1n
+    ? [nextDoubleIndexFib, doubleIndexFib + nextDoubleIndexFib]
+    : [doubleIndexFib, nextDoubleIndexFib];
+};
+
+// // Refactored but need optimization
+// function fib(n) {
+//   let previous = 0n;
+//   let current = 1n;
+
+//   if (n > 0) {
+//     for (let i = 0; i < n; i++) {
+//       [previous, current] = [current, previous + current];
+//     }
+//     return previous;
+//   } else {
+//     n = -n;
+//     for (let i = 0; i < n; i++) {
+//       [previous, current] = [current - previous, previous];
+//     }
+//     return previous;
+//   }
+// }
 
 // // Method 0
 // function fib(n) {
@@ -73,6 +95,7 @@ function fib(n) {
 //   }
 // }
 
+console.log(fib(2000000n));
 console.log(fib(0)); // 0n
 console.log(fib(1)); // 1n
 console.log(fib(2)); // 1n
